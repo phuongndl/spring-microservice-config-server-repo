@@ -1,4 +1,9 @@
+server:
+  port: 8088
+  
 spring:
+  application:
+    name: 'auth'
   datasource:
     username: root
     password: 123456
@@ -12,9 +17,37 @@ spring:
       client:
         url:
         - http://localhost:8082
+  logging:
+    pattern:
+      console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([${springAppName:-},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]){yellow} %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+    level:
+      org.springframework: WARN
+      org.hibernate: WARN
+  logstash:
+    server: logstash
+    port: 5000
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka
+      
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - "*"
+  endpoint:
+    health:
+      show-details: always
+
+app:
+  security:
+    jwt:
+      secret: testSuperSecret
+      expirationMs: 86400000
+      
+hystrix:
+  shareSecurityContext: true  
